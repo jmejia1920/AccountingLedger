@@ -1,5 +1,7 @@
 package com.learntocode;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -36,5 +38,10 @@ public class FinancialTransactions {
         ArrayList<Product> transactions = new ArrayList<>();
         String line;
         return transactions;
+    }
+    private static void addDeposit(ArrayList<Product>transactions) throws IOException {
+        FileWriter writer = new FileWriter("transactions.csv");
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter amount");
     }
 }
