@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FinancialTransactions {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         ArrayList<Product> transactions = getTransactions();
 
         for (Product product : transactions) {
@@ -25,7 +25,7 @@ public class FinancialTransactions {
             command = scanner.nextInt();
 
             switch (command) {
-                case 1:
+                case 1:addDeposit(transactions);
                 case 2:
                 case 3:
                 case 4:
@@ -43,5 +43,8 @@ public class FinancialTransactions {
         FileWriter writer = new FileWriter("transactions.csv");
         Scanner input = new Scanner(System.in);
         System.out.println("Enter amount");
+        writer.write(String.valueOf(input));
+        writer.close();
+
     }
 }
