@@ -1,13 +1,13 @@
 package com.learntocode;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FinancialTransactions {
-        private static ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        private static ArrayList<Product> transactions = new ArrayList<Product>();
         private static final String FILE_NAME = "transactions.csv";
         private static final String DATE_FORMAT = "yyyy-MM-dd";
         private static final String TIME_FORMAT = "HH:mm:ss";
@@ -53,6 +53,28 @@ public class FinancialTransactions {
 
         public static void loadTransactions(String fileName) {
             fileName = "transactions.csv";
+            ArrayList<Product> transactions = new ArrayList<>();
+            BufferedReader reader = null;
+
+            try {
+                File file = new File("transactions.csv");
+                reader = new BufferedReader(new FileReader(file));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
 
             // This method should load transactions from a file with the given file name.
             // If the file does not exist, it should be created.
@@ -64,7 +86,7 @@ public class FinancialTransactions {
             // If any errors occur, an appropriate error message should be displayed.
         }
 
-        private static void addDeposit(Scanner scanner) {
+            private static void addDeposit(Scanner scanner) {
             // This method should prompt the user to enter the date, time, vendor, and amount of a deposit.
             // The user should enter the date and time in the following format: yyyy-MM-dd HH:mm:ss
             // The amount should be a positive number.
@@ -196,4 +218,4 @@ public class FinancialTransactions {
         }
     }
 
-}
+
