@@ -2,16 +2,19 @@ package com.learntocode;
 
 public class Product {
     private String date;
+    private String time;
     private String description;
     private String vendor;
     private double amount;
 
-    public Product(String date, String description, String vendor, double amount) {
+    public Product(String date, String time, String description, String vendor, double amount) {
         this.date = date;
+        this.time = time;
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;
     }
+
 
     public String getDate() {
         return date;
@@ -19,6 +22,14 @@ public class Product {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getDescription() {
