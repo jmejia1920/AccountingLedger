@@ -14,7 +14,7 @@ public class FinancialTransactions {
         private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
         private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern(TIME_FORMAT);
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws FileNotFoundException {
             loadTransactions(FILE_NAME);
             Scanner scanner = new Scanner(System.in);
             boolean running = true;
@@ -51,42 +51,51 @@ public class FinancialTransactions {
             scanner.close();
         }
 
-        public static void loadTransactions(String fileName) {
+        public static void loadTransactions(String fileName) throws FileNotFoundException {
             fileName = "transactions.csv";
             ArrayList<Product> transactions = new ArrayList<>();
-            BufferedReader reader = null;
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            Scanner input = new Scanner(System.in);
 
             try {
                 File file = new File("transactions.csv");
                 reader = new BufferedReader(new FileReader(file));
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println("No transactions found.");
+                        System.out.println("Please add new transaction.");
+                        System.out.print("Enter date (yyyy-MM-dd): ");
+                        String date = input.nextLine();
+                        System.out.print("Enter time (Military format, Example: 13:45:00 ): ");
+                        String time = input.nextLine();
+                        System.out.print("Enter description: ");
+                        String description = input.nextLine();
+                        System.out.print("Enter vendor: ");
+                        String vendor = input.nextLine();
+                        System.out.print("Enter amount: ");
+                        Double amount = input.nextDouble();
+                    }
             } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                throw new RuntimeException(e);
             }
-
-
-            // This method should load transactions from a file with the given file name.
-            // If the file does not exist, it should be created.
-            // The transactions should be stored in the `transactions` ArrayList.
-            // Each line of the file represents a single transaction in the following format:
-            // <date>,<time>,<vendor>,<type>,<amount>
-            // For example: 2023-04-29,13:45:00,Amazon,PAYMENT,29.99
-            // After reading all the transactions, the file should be closed.
-            // If any errors occur, an appropriate error message should be displayed.
         }
+        private static void addDeposit(Scanner scanner) {
+            Scanner scanner1 = new Scanner(System.in);
 
-            private static void addDeposit(Scanner scanner) {
+            System.out.println("Enter deposit.");
+            System.out.println("Enter date(yyyy-MM-dd): ");
+            String date = scanner1.nextLine();
+            System.out.println("Enter time (Military format, Example: 13:45:00): ");
+            String time = scanner1.nextLine();
+            System.out.println("Enter description: ");
+            String description = scanner1.nextLine();
+            System.out.println("Enter vendor: ");
+            String vendor = scanner1.nextLine();
+            System.out.println("Enter amount of a deposit: ");
+            double amount = scanner1.nextDouble();
+            ArrayList<Product> Deposit = new ArrayList<>();
+            Deposit.add(new Product(date,time,description,vendor,amount));
             // This method should prompt the user to enter the date, time, vendor, and amount of a deposit.
             // The user should enter the date and time in the following format: yyyy-MM-dd HH:mm:ss
             // The amount should be a positive number.
@@ -95,6 +104,20 @@ public class FinancialTransactions {
         }
 
         private static void addPayment(Scanner scanner) {
+            System.out.println("Enter deposit.");
+            System.out.println("Enter date(yyyy-MM-dd): ");
+            Scanner scanner2 = new Scanner(System.in);
+            String date = scanner2.nextLine();
+            System.out.println("Enter time (Military format, Example: 13:45:00): ");
+            String time = scanner2.nextLine();
+            System.out.println("Enter description: ");
+            String description = scanner2.nextLine();
+            System.out.println("Enter vendor: ");
+            String vendor = scanner2.nextLine();
+            System.out.println("Enter amount of a payment: ");
+            double amount = scanner2.nextDouble();
+            ArrayList<Product> Payment = new ArrayList<>();
+            Payment.add(new Product(date,time,description,vendor,amount));
             // This method should prompt the user to enter the date, time, vendor, and amount of a payment.
             // The user should enter the date and time in the following format: yyyy-MM-dd HH:mm:ss
             // The amount should be a positive number.
