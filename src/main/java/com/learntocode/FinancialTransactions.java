@@ -1,10 +1,12 @@
 package com.learntocode;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class FinancialTransactions {
@@ -51,36 +53,25 @@ public class FinancialTransactions {
 
             scanner.close();
         }
-
-        public static void loadTransactions(String fileName) throws FileNotFoundException {
-            fileName = "transactions.csv";
-            ArrayList<Product> transactions = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            Scanner input = new Scanner(System.in);
-
-            try {
-                File file = new File("transactions.csv");
-                reader = new BufferedReader(new FileReader(file));
-
-                    String line;
+        public static void loadTransactions(String fileName) {
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(fileName));
+                    String line = "";
                     while ((line = reader.readLine()) != null) {
-                        System.out.println("No transactions found.");
-                        System.out.println("Please add new transaction.");
-                        System.out.print("Enter date (yyyy-MM-dd): ");
-                        String date = input.nextLine();
-                        System.out.print("Enter time (Military format, Example: 13:45:00 ): ");
-                        String time = input.nextLine();
-                        System.out.print("Enter description: ");
-                        String description = input.nextLine();
-                        System.out.print("Enter vendor: ");
-                        String vendor = input.nextLine();
-                        System.out.print("Enter amount: ");
-                        Double amount = input.nextDouble();
+                        String[] parts = line.split("\\|");
+                        LocalDate date = LocalDate.parse(parts[0], DATE_FORMATTER);
+                        LocalTime time = LocalTime.parse(parts[1], TIME_FORMATTER);
+                        String description = parts[2];
+                        String vendor = parts[3];
+                        double amount = Double.parseDouble(parts[4]);
+                        transactions.add(new Product(date, time, description, vendor, amount));
                     }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                    reader.close();
+                } catch (IOException e) {
+                    System.out.println("Error loading inventory: " + e.getMessage());
+                }
             }
-        }
+
         private static void addDeposit(Scanner scanner) {
             try{
             Scanner scanner1 = new Scanner(System.in);
@@ -89,10 +80,6 @@ public class FinancialTransactions {
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             System.out.println("Enter deposit.");
-            System.out.println("Enter date(yyyy-MM-dd): ");
-            String date = scanner1.nextLine();
-            System.out.println("Enter time (Military format, Example: 13:45:00): ");
-            String time = scanner1.nextLine();
             System.out.println("Enter description: ");
             String description = scanner1.nextLine();
             System.out.println("Enter vendor: ");
@@ -101,12 +88,12 @@ public class FinancialTransactions {
             double amount = scanner1.nextDouble();
 
 
-            Product newProduct;
+            String newProduct;
             double payment = 0;
-            newProduct = new Product(date,time,description,vendor,payment);
-            bufWriter.write(newProduct.getDate() + "|" + newProduct.getTime() + "|" + newProduct.getDescription() + "|" + newProduct.getVendor() + "|" + newProduct.getAmount());
+            Product Product = new Product(date, time, description, vendor, amount);
+            bufWriter.write(Product.getDate() + "|" + Product.getTime() + "|" + Product.getDescription() + "|" + Product.getVendor() + "|" + Product.getAmount());
             bufWriter.newLine();
-            transactions.add(newProduct);
+            transactions.add(Product);
             System.out.println("Transaction was added.");
             bufWriter.close();
             
@@ -121,33 +108,25 @@ public class FinancialTransactions {
             try{
 
                 Scanner scanner1 = new Scanner(System.in);
-                String filepath = "transactions.csv";
-                FileWriter fileWriter = new FileWriter(filepath,true);
+                String file = "transactions.csv";
+                FileWriter fileWriter = new FileWriter(file,true);
                 BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             System.out.println("Enter deposit.");
-            System.out.println("Enter date(yyyy-MM-dd): ");
-            Scanner scanner2 = new Scanner(System.in);
-            String date = scanner2.nextLine();
-            System.out.println("Enter time (Military format, Example: 13:45:00): ");
-            String time = scanner2.nextLine();
             System.out.println("Enter description: ");
             String description = scanner2.nextLine();
             System.out.println("Enter vendor: ");
             String vendor = scanner2.nextLine();
             System.out.println("Enter amount of a payment: ");
             double amount = scanner2.nextDouble();
-            ArrayList<Product> Payment = new ArrayList<>();
-            Payment.add(new Product(date,time,description,vendor,amount));
 
-                Product newProduct;
-                double payment = 0;
-                newProduct = new Product(date,time,description,vendor,payment);
-                bufWriter.write(newProduct.getDate() + "|" + newProduct.getTime() + "|" + newProduct.getDescription() + "|" + newProduct.getVendor() + "|" + newProduct.getAmount());
-                bufWriter.newLine();
-                transactions.add(newProduct);
-                System.out.println("Transaction was added.");
-                bufWriter.close();
+            double payment = 0;
+            Product newProduct = new Product(date,time,description,vendor,payment);
+            bufWriter.write(newProduct.getDate() + "|" + newProduct.getTime() + "|" + newProduct.getDescription() + "|" + newProduct.getVendor() + "|" + newProduct.getAmount());
+            bufWriter.newLine();
+            transactions.add(newProduct);
+            System.out.println("Payment was added.");
+            bufWriter.close();
 
         } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -166,6 +145,7 @@ public class FinancialTransactions {
                 System.out.println("H) Home");
 
                 String input = scanner.nextLine().trim();
+
 
                 switch (input.toUpperCase()) {
                     case "A":
@@ -213,6 +193,13 @@ public class FinancialTransactions {
         }
 
         private static void reportsMenu(Scanner scanner) {
+            LocalDate date = LocalDate.now();
+            LocalDate currentDate = LocalDate.now();
+            LocalDate firstDayOfPreviousMonth = currentDate.minusMonths(1).withDayOfMonth(1);
+            LocalDate lastDayOfPreviousMonth = firstDayOfPreviousMonth.withDayOfMonth(firstDayOfPreviousMonth.lengthOfMonth());
+
+
+
             boolean running = true;
             while (running) {
                 System.out.println("Reports");
@@ -228,51 +215,39 @@ public class FinancialTransactions {
 
                 switch (input) {
                     case "1":
-                        // Generate a report for all transactions within the current month,
-                        // including the date, vendor, and amount for each transaction.
-                        // The report should include a total of all transaction amounts for the month.
+
+
+                        break;
+
                     case "2":
-                        // Generate a report for all transactions within the previous month,
-                        // including the date, vendor, and amount for each transaction.
-                        // The report should include a total of all transaction amounts for the month.
+
+                        break;
                     case "3":
-                        // Generate a report for all transactions within the current year,
-                        // including the date, vendor, and amount for each transaction.
-                        // The report should include a total of all transaction amounts for the year.
+
+                         break;
 
                     case "4":
-                        // Generate a report for all transactions within the previous year,
-                        // including the date, vendor, and amount for each transaction.
-                        // The report should include a total of all transaction amounts for the year.
+
                     case "5":
-                        // Prompt the user to enter a vendor name, then generate a report for all transactions
-                        // with that vendor, including the date, vendor, and amount for each transaction.
-                        // The report should include a total of all transaction amounts for the vendor.
+
                     case "0":
                         running = false;
                     default:
                         System.out.println("Invalid option");
                         break;
+                }}
+
+
+
                 }
             }
-        }
 
 
-        private static void filterTransactionsByDate(LocalDate startDate, LocalDate endDate) {
-            // This method filters the transactions by date and prints a report to the console.
-            // It takes two parameters: startDate and endDate, which represent the range of dates to filter by.
-            // The method loops through the transactions list and checks each transaction's date against the date range.
-            // Transactions that fall within the date range are printed to the console.
-            // If no transactions fall within the date range, the method prints a message indicating that there are no results.
-        }
 
-        private static void filterTransactionsByVendor(String vendor) {
-            // This method filters the transactions by vendor and prints a report to the console.
-            // It takes one parameter: vendor, which represents the name of the vendor to filter by.
-            // The method loops through the transactions list and checks each transaction's vendor name against the specified vendor name.
-            // Transactions with a matching vendor name are printed to the console.
-            // If no transactions match the specified vendor name, the method prints a message indicating that there are no results.
-        }
-    }
+
+
+
+
+
 
 
