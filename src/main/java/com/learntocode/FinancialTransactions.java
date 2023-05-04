@@ -197,15 +197,19 @@ public class FinancialTransactions {
         }
 
         private static void displayDeposits() {
-            // This method should display a table of all deposits in the `transactions` ArrayList.
-            // The table should have columns for date, time, vendor, and amount.
-            // The total amount of all deposits should be displayed at the bottom of the table.
+            for(Product product : transactions) {
+                if(product.getAmount() > 0){
+                System.out.println(product);
+                }
+            }
         }
 
         private static void displayPayments() {
-            // This method should display a table of all payments in the `transactions` ArrayList.
-            // The table should have columns for date, time, vendor, and amount.
-            // The total amount of all payments should be displayed at the bottom of the table.
+            for(Product product : transactions) {
+                if(product.getAmount() < 0){
+                    System.out.println(product);
+                }
+            }
         }
 
         private static void reportsMenu(Scanner scanner) {
