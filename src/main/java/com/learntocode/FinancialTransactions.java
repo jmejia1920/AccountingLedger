@@ -1,6 +1,7 @@
 package com.learntocode;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -81,7 +82,11 @@ public class FinancialTransactions {
             }
         }
         private static void addDeposit(Scanner scanner) {
+            try{
             Scanner scanner1 = new Scanner(System.in);
+            String filepath = "transactions.csv";
+            FileWriter fileWriter = new FileWriter(filepath,true);
+            BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             System.out.println("Enter deposit.");
             System.out.println("Enter date(yyyy-MM-dd): ");
@@ -94,16 +99,32 @@ public class FinancialTransactions {
             String vendor = scanner1.nextLine();
             System.out.println("Enter amount of a deposit: ");
             double amount = scanner1.nextDouble();
-            ArrayList<Product> Deposit = new ArrayList<>();
-            Deposit.add(new Product(date,time,description,vendor,amount));
-            // This method should prompt the user to enter the date, time, vendor, and amount of a deposit.
-            // The user should enter the date and time in the following format: yyyy-MM-dd HH:mm:ss
-            // The amount should be a positive number.
-            // After validating the input, a new `Deposit` object should be created with the entered values.
-            // The new deposit should be added to the `transactions` ArrayList.
+
+
+            Product newProduct;
+            double payment = 0;
+            newProduct = new Product(date,time,description,vendor,payment);
+            bufWriter.write(newProduct.getDate() + "|" + newProduct.getTime() + "|" + newProduct.getDescription() + "|" + newProduct.getVendor() + "|" + newProduct.getAmount());
+            bufWriter.newLine();
+            transactions.add(newProduct);
+            System.out.println("Transaction was added.");
+            bufWriter.close();
+            
+
+
+        } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         private static void addPayment(Scanner scanner) {
+            try{
+
+                Scanner scanner1 = new Scanner(System.in);
+                String filepath = "transactions.csv";
+                FileWriter fileWriter = new FileWriter(filepath,true);
+                BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+
             System.out.println("Enter deposit.");
             System.out.println("Enter date(yyyy-MM-dd): ");
             Scanner scanner2 = new Scanner(System.in);
@@ -118,11 +139,19 @@ public class FinancialTransactions {
             double amount = scanner2.nextDouble();
             ArrayList<Product> Payment = new ArrayList<>();
             Payment.add(new Product(date,time,description,vendor,amount));
-            // This method should prompt the user to enter the date, time, vendor, and amount of a payment.
-            // The user should enter the date and time in the following format: yyyy-MM-dd HH:mm:ss
-            // The amount should be a positive number.
-            // After validating the input, a new `Payment` object should be created with the entered values.
-            // The new payment should be added to the `transactions` ArrayList.
+
+                Product newProduct;
+                double payment = 0;
+                newProduct = new Product(date,time,description,vendor,payment);
+                bufWriter.write(newProduct.getDate() + "|" + newProduct.getTime() + "|" + newProduct.getDescription() + "|" + newProduct.getVendor() + "|" + newProduct.getAmount());
+                bufWriter.newLine();
+                transactions.add(newProduct);
+                System.out.println("Transaction was added.");
+                bufWriter.close();
+
+        } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         private static void ledgerMenu(Scanner scanner) {
@@ -161,9 +190,10 @@ public class FinancialTransactions {
         }
 
         private static void displayLedger() {
-            // This method should display a table of all transactions in the `transactions` ArrayList.
-            // The table should have columns for date, time, vendor, type, and amount.
-            // The total balance of all transactions should be displayed at the bottom of the table.
+            for(Product product : transactions){
+                System.out.println(product);
+            }
+
         }
 
         private static void displayDeposits() {
