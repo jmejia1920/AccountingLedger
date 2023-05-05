@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class FinancialTransactions {
@@ -199,12 +197,6 @@ public class FinancialTransactions {
 
         private static void reportsMenu(Scanner scanner) {
             LocalDate date = LocalDate.now();
-            LocalDate currentDate = LocalDate.now();
-            LocalDate firstDayOfPreviousMonth = currentDate.minusMonths(1).withDayOfMonth(1);
-            LocalDate lastDayOfPreviousMonth = firstDayOfPreviousMonth.withDayOfMonth(firstDayOfPreviousMonth.lengthOfMonth());
-
-
-
             boolean running = true;
             while (running) {
                 System.out.println("Reports");
