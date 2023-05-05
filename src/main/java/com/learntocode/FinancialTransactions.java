@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class FinancialTransactions {
-        private static ArrayList<Product> transactions = new ArrayList<Product>();
+        private static final ArrayList<Product> transactions = new ArrayList<Product>();
         private static final String FILE_NAME = "transactions.csv";
         private static final String DATE_FORMAT = "yyyy-MM-dd";
         private static final String TIME_FORMAT = "HH:mm:ss";
@@ -46,7 +46,6 @@ public class FinancialTransactions {
                         running = false;
                         break;
                     default:
-                        System.out.println("Invalid option");
                         break;
                 }
             }
@@ -74,32 +73,32 @@ public class FinancialTransactions {
 
         private static void addDeposit(Scanner scanner) {
             try{
-            Scanner scanner1 = new Scanner(System.in);
-            String filepath = "transactions.csv";
-            FileWriter fileWriter = new FileWriter(filepath,true);
+
+
+            FileWriter fileWriter = new FileWriter(FILE_NAME,true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             System.out.println("Enter deposit.");
             System.out.println("Enter description: ");
-            String description = scanner1.nextLine();
+            String description = scanner.nextLine();
             System.out.println("Enter vendor: ");
-            String vendor = scanner1.nextLine();
+            String vendor = scanner.nextLine();
             System.out.println("Enter amount of a deposit: ");
-            double amount = scanner1.nextDouble();
+            double amount = scanner.nextDouble();
 
+            LocalDate date = LocalDate.now();
+            LocalTime time1 = LocalTime.now();
+            String time2 = time1.format(TIME_FORMATTER);
+            LocalTime time = LocalTime.parse(time2,TIME_FORMATTER);
 
-            String newProduct;
-            double payment = 0;
-            Product Product = new Product(date, time, description, vendor, amount);
+            Product Product = new Product(date,time,description, vendor, amount);
             bufWriter.write(Product.getDate() + "|" + Product.getTime() + "|" + Product.getDescription() + "|" + Product.getVendor() + "|" + Product.getAmount());
             bufWriter.newLine();
             transactions.add(Product);
             System.out.println("Transaction was added.");
             bufWriter.close();
             
-
-
-        } catch (IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -107,21 +106,25 @@ public class FinancialTransactions {
         private static void addPayment(Scanner scanner) {
             try{
 
-                Scanner scanner1 = new Scanner(System.in);
-                String file = "transactions.csv";
-                FileWriter fileWriter = new FileWriter(file,true);
+
+                FileWriter fileWriter = new FileWriter(FILE_NAME,true);
                 BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             System.out.println("Enter deposit.");
             System.out.println("Enter description: ");
-            String description = scanner2.nextLine();
+            String description = scanner.nextLine();
             System.out.println("Enter vendor: ");
-            String vendor = scanner2.nextLine();
+            String vendor = scanner.nextLine();
             System.out.println("Enter amount of a payment: ");
-            double amount = scanner2.nextDouble();
+            double amount = scanner.nextDouble();
 
-            double payment = 0;
-            Product newProduct = new Product(date,time,description,vendor,payment);
+            LocalDate date = LocalDate.now();
+            LocalTime time1 = LocalTime.now();
+            String time2 = time1.format(TIME_FORMATTER);
+            LocalTime time = LocalTime.parse(time2,TIME_FORMATTER);
+
+
+            Product newProduct = new Product(date,time,description,vendor,amount);
             bufWriter.write(newProduct.getDate() + "|" + newProduct.getTime() + "|" + newProduct.getDescription() + "|" + newProduct.getVendor() + "|" + newProduct.getAmount());
             bufWriter.newLine();
             transactions.add(newProduct);
@@ -134,7 +137,9 @@ public class FinancialTransactions {
         }
 
         private static void ledgerMenu(Scanner scanner) {
+
             boolean running = true;
+
             while (running) {
                 System.out.println("Ledger");
                 System.out.println("Choose an option:");
@@ -163,7 +168,7 @@ public class FinancialTransactions {
                     case "H":
                         running = false;
                     default:
-                        System.out.println("Invalid option");
+                        System.out.println("Returned to home screen.\n");
                         break;
                 }
             }
@@ -215,32 +220,57 @@ public class FinancialTransactions {
 
                 switch (input) {
                     case "1":
-
-
+                        for(Product information: transactions){
+                            if(information.getDate().getMonth() == date.getMonth()){
+                                System.out.println(information);
+                            }
+                        }
                         break;
 
                     case "2":
+                        for(Product information : transactions){
+                            if (information.getDate().getMonthValue() == date.getMonthValue()-1) {
+                                System.out.println(information);
+                            }
+                        }
 
                         break;
                     case "3":
+                        for(Product information : transactions){
+                            if(information.getDate().getYear() == date.getYear()) {
+                                System.out.println(information);
+                            }
+                        }
 
-                         break;
+
+                        break;
 
                     case "4":
+                        for(Product information : transactions ){
+                            if(information.getDate().getYear() == (date.getYear()-1)){
+                                System.out.println(information);
+                            }
+                        }
+                        break;
 
                     case "5":
-
+                        System.out.println("Enter the name of the vendor: ");
+                        String response = scanner.next();
+                        for (Product information : transactions){
+                            if(information.getVendor().equals(response)){
+                                System.out.println(information);
+                            }
+                        }
+                        break;
                     case "0":
                         running = false;
                     default:
                         System.out.println("Invalid option");
                         break;
-                }}
-
-
-
                 }
             }
+        }
+}
 
 
 
